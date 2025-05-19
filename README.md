@@ -128,6 +128,9 @@ Tidak perlu API key khusus karena OpenStreetMap bersifat **gratis dan open sourc
 ###  **Map**
 ![UI/UX](./src/public/images/Map.png)
 
+###  **Favorite**
+![UI/UX](./src/public/images/Favorite.png)
+
 ### **Offline Mode**
 ![UI/UX](./src/public/images/Offline.png)
 
