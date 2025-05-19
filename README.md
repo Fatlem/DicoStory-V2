@@ -138,8 +138,8 @@ Tidak perlu API key khusus karena OpenStreetMap bersifat **gratis dan open sourc
 
 ### 🚀 **Deployment**
 
-Aplikasi ini di-deploy menggunakan GitHub Pages dan dapat diakses melalui:
-[https://fatlemfat.github.io/dicostory/](https://fatlemfat.github.io/dicostory/)
+Aplikasi ini di-deploy menggunakan Netlify Pages dan dapat diakses melalui:
+[https://dicostory.netlify.app/](https://dicostory.netlify.app/)
 
 ---
 
