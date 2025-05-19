@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DicoStory - Berbagi cerita di komunitas Dicoding">
+  <meta name="theme-color" content="#4e6af0">
+  <title>DicoStory</title>
+  <link rel="icon" href="./src/public/note.png" type="image/x-icon">
+  <link rel="shortcut icon" href="./src/public/note.png" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="./src/public/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./src/public/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./src/public/icons/favicon-16x16.png">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="./src/styles/styles.css">
+  <link rel="stylesheet" href="./src/styles/map-styles.css">
+  <link rel="manifest" href="./manifest.json">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="app-shell-container">
+  <a href="#main-content" class="skip-link">Langsung ke konten</a>
+
+  <header class="app-shell-header">
+    <div class="header-container">
+      <div class="brand">
+        <h1><a href="#/">DicoStory</a></h1>
+      </div>
+      <nav id="drawer" class="nav">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="#/"><i class="fas fa-home"></i> Beranda</a></li>
+          <li class="nav-item"><a href="#/add"><i class="fas fa-plus-circle"></i> Tambah Cerita</a></li>
+          <li class="nav-item"><a href="#/map"><i class="fas fa-map-marked-alt"></i> Peta Cerita</a></li>
+          <li class="nav-item"><a href="#/favorites"><i class="fas fa-bookmark"></i> Favorit</a></li>
+          <li class="nav-item" id="login-menu"><a href="#/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+          <li class="nav-item" id="register-menu"><a href="#/register"><i class="fas fa-user-plus"></i> Register</a></li>
+          <li class="nav-item" id="logout-menu"><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+      </nav>
+      <button id="menu" class="header-menu" aria-label="Toggle navigation menu">☰</button>
+    </div>
+  </header>
+
+  <main id="main-content" class="app-shell-content" tabindex="-1">
+    <div id="offline-indicator" class="offline-indicator">
+      <i class="fas fa-wifi"></i> Anda sedang offline. Beberapa fitur mungkin terbatas.
+    </div>
+    
+    <div id="pwa-install-banner" class="pwa-install-banner">
+      <p><i class="fas fa-mobile-alt"></i> Pasang DicoStory di perangkat Anda untuk pengalaman yang lebih baik</p>
+      <button id="install-pwa" class="btn">Pasang</button>
+      <button id="close-banner" class="close-banner">&times;</button>
+    </div>
+    
+    <div id="content" class="content"></div>
+  </main>
+
+  <footer class="app-shell-footer">
+    <div class="footer-content">
+      <p>© 2025 Fatlem DicoStory - Berbagi Cerita Dicoding</p>
+      <div class="social-links">
+        <a href="https://github.com/Fatlem" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://www.instagram.com/fatelm_" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/faathir-el-tasleem" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>

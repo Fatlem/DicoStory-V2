@@ -1,0 +1,117 @@
+{
+  "name": "DicoStory - Berbagi Cerita Dicoding",
+  "short_name": "DicoStory",
+  "description": "Aplikasi untuk berbagi cerita menarik dari komunitas Dicoding",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f6f7fb",
+  "theme_color": "#4e67f0",
+  "icons": [
+    {
+      "src": "./src/public/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./src/public/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./src/public/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./src/public/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./src/public/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./src/public/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./src/public/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./src/public/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./src/public/icons/maskable-icon.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tambah Cerita Baru",
+      "short_name": "Tambah Cerita",
+      "description": "Bagikan cerita menarik kamu",
+      "url": "./index.html#/add",
+      "icons": [
+        {
+          "src": "./src/public/icons/add-icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Lihat Favorit",
+      "short_name": "Favorit",
+      "description": "Lihat cerita favorit kamu",
+      "url": "./index.html#/favorites",
+      "icons": [
+        {
+          "src": "./src/public/icons/favorite-icon-96x96.png", 
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./src/public/screenshots/desktop-1.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "./src/public/screenshots/desktop-2.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "./src/public/screenshots/mobile-1.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "./src/public/screenshots/mobile-2.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ]
+}

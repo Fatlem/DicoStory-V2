@@ -1,0 +1,21 @@
+{
+  "name": "dicostory",
+  "version": "1.0.0",
+  "description": "Aplikasi berbagi cerita untuk komunitas Dicoding",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "dicoding",
+    "story",
+    "spa"
+  ],
+  "author": "Fatlem",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^4.4.11"
+  }
+}
