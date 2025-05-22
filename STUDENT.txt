@@ -1,6 +1,6 @@
 Nama : Faathir El Tasleem 
 Cohort ID : FC007D5Y1704
-Link : https://dicostory.netlify.app/
+Link Deploy : https://dicostory.netlify.app/
 
 ## 🚀 DicoStory - Aplikasi Berbagi Cerita Dicoding
 
