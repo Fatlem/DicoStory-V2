@@ -1,5 +1,3 @@
-// File: src/app.js
-
 import { routes } from './routes/routes.js';
 import { UrlParser } from './utils/url-parser.js';
 import { AuthHelper } from './utils/auth-helper.js';
@@ -12,6 +10,7 @@ window.selectedStoryId = null;
 
 class App {
   constructor() {
+    this._currentPage = null;
     this._initializeApp();
   }
 
@@ -27,9 +26,14 @@ class App {
     this._initMobileNav();
     this._checkAuthStatus();
     this._handleRoute();
-    
+
     window.addEventListener('hashchange', () => {
+      this._cleanupCurrentPage();
       this._handleRoute();
+    });
+
+    window.addEventListener('beforeunload', () => {
+      this._cleanupCurrentPage();
     });
 
     // Setup view transitions if supported
@@ -47,19 +51,37 @@ class App {
 
   async _initServiceWorker() {
     try {
-      // Register Service Worker
-      const registration = await NotificationHelper.registerServiceWorker();
+      console.log('Initializing Service Worker...');
       
-      // Request notification permission if logged in
-      if (AuthHelper.isLoggedIn()) {
-        const permission = await NotificationHelper.requestPermission();
+      if ('serviceWorker' in navigator) {
+        const registration = await navigator.serviceWorker.register('./sw.js', {
+          scope: './'
+        });
         
-        if (permission && registration) {
-          await NotificationHelper.subscribePushNotification(registration);
+        console.log('Service Worker registered successfully:', registration);
+        
+        // Update service worker jika ada versi baru
+        registration.addEventListener('updatefound', () => {
+          console.log('New service worker found, updating...');
+        });
+        
+        // Request notification permission if logged in
+        if (AuthHelper.isLoggedIn()) {
+          const permission = await NotificationHelper.requestPermission();
+          
+          if (permission && registration) {
+            await NotificationHelper.subscribePushNotification(registration);
+          }
         }
+        
+        return registration;
+      } else {
+        console.warn('Service Worker not supported');
+        return null;
       }
     } catch (error) {
       console.error('Error initializing service worker:', error);
+      return null;
     }
   }
 
@@ -160,6 +182,8 @@ class App {
   }
 
   async _handleLogout() {
+    this._cleanupCurrentPage();
+    
     AuthHelper.logout();
     
     // Clear data from IndexedDB
@@ -174,8 +198,18 @@ class App {
     window.location.reload();
   }
 
+  _cleanupCurrentPage() {
+    if (this._currentPage && typeof this._currentPage.beforeUnload === 'function') {
+      console.log('Cleaning up current page...');
+      this._currentPage.beforeUnload();
+      this._currentPage = null;
+    }
+  }
+
   async _handleRoute() {
     console.log('Handling route...');
+ 
+    this._cleanupCurrentPage();
     
     const urlParts = window.location.hash.slice(1).split('/');
     if (urlParts.length > 2 && urlParts[1] === 'detail') {
@@ -222,13 +256,13 @@ class App {
       
       contentContainer.innerHTML = '';
 
-      const view = new page.view();
+      this._currentPage = new page.view();
       console.log('View instantiated');
-      const content = await view.render();
+      const content = await this._currentPage.render();
       console.log('Content rendered');
       contentContainer.innerHTML = content;
       console.log('Content injected into DOM');
-      await view.afterRender();
+      await this._currentPage.afterRender();
       console.log('afterRender completed');
 
       document.getElementById('main-content').focus();
