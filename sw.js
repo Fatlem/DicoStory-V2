@@ -1,24 +1,27 @@
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.5.4/workbox-sw.js');
 
+const CACHE_NAME = 'dicostory-v1';
+const urlsToCache = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png',
+  './icons/badge-96x96.png',
+];
+
 if (workbox) {
   console.log('Workbox berhasil dimuat');
   
-  // Custom precaching
   workbox.precaching.precacheAndRoute([
     { url: './', revision: '1' },
     { url: './index.html', revision: '1' },
-    { url: './src/app.js', revision: '1' },
-    { url: './src/styles/styles.css', revision: '1' },
-    { url: './src/styles/map-styles.css', revision: '1' },
     { url: './manifest.json', revision: '1' },
-    { url: './src/public/fallback.jpg', revision: '1' },
-    { url: './src/public/icons/favicon-16x16.png', revision: '1' },
-    { url: './src/public/icons/favicon-32x32.png', revision: '1' },
-    { url: './src/public/icons/apple-touch-icon.png', revision: '1' },
-    { url: './src/public/note.png', revision: '1' },
+    { url: './icons/icon-192x192.png', revision: '1' },
+    { url: './icons/icon-512x512.png', revision: '1' },
+    { url: './icons/badge-96x96.png', revision: '1' },
   ]);
 
-  // Cache halaman
   workbox.routing.registerRoute(
     ({ request }) => request.destination === 'document',
     new workbox.strategies.NetworkFirst({
@@ -26,13 +29,12 @@ if (workbox) {
       plugins: [
         new workbox.expiration.ExpirationPlugin({
           maxEntries: 50,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 hari
+          maxAgeSeconds: 30 * 24 * 60 * 60, 
         }),
       ],
     })
   );
 
-  // Cache assets statis (CSS, JS, dll)
   workbox.routing.registerRoute(
     ({ request }) => 
       request.destination === 'style' || 
@@ -43,13 +45,12 @@ if (workbox) {
       plugins: [
         new workbox.expiration.ExpirationPlugin({
           maxEntries: 60,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 hari
+          maxAgeSeconds: 30 * 24 * 60 * 60,
         }),
       ],
     })
   );
 
-  // Cache gambar
   workbox.routing.registerRoute(
     ({ request }) => request.destination === 'image',
     new workbox.strategies.CacheFirst({
@@ -57,13 +58,12 @@ if (workbox) {
       plugins: [
         new workbox.expiration.ExpirationPlugin({
           maxEntries: 60,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 hari
+          maxAgeSeconds: 30 * 24 * 60 * 60,
         }),
       ],
     })
   );
 
-  // Cache API
   workbox.routing.registerRoute(
     ({ url }) => url.origin === 'https://story-api.dicoding.dev',
     new workbox.strategies.NetworkFirst({
@@ -71,7 +71,7 @@ if (workbox) {
       plugins: [
         new workbox.expiration.ExpirationPlugin({
           maxEntries: 100,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 hari
+          maxAgeSeconds: 5 * 60,
         }),
         new workbox.cacheableResponse.CacheableResponsePlugin({
           statuses: [0, 200],
@@ -80,42 +80,64 @@ if (workbox) {
     })
   );
   
-  // Fallback untuk halaman yang tidak ditemukan
   workbox.routing.setCatchHandler(({ event }) => {
     if (event.request.destination === 'document') {
-      return caches.match('./src/views/pages/not-found.html')
-        .then((response) => {
-          return response || caches.match('./index.html');
-        });
+      return caches.match('./index.html');
     }
-    
     return Response.error();
   });
+
 } else {
-  console.log('Workbox gagal dimuat');
+  console.log('Workbox gagal dimuat, menggunakan cache manual');
+  
+  self.addEventListener('install', (event) => {
+    event.waitUntil(
+      caches.open(CACHE_NAME)
+        .then((cache) => {
+          return cache.addAll(urlsToCache);
+        })
+    );
+  });
+
+  self.addEventListener('fetch', (event) => {
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          return response || fetch(event.request);
+        })
+    );
+  });
 }
 
-// Event Push Notification
 self.addEventListener('push', (event) => {
   console.log('Service Worker: Push received');
 
   let notification = {
     title: 'DicoStory',
     options: {
-      body: 'Ada pembaruan baru!',
-      icon: './src/public/icons/icon-192x192.png',
-      badge: './src/public/icons/badge-96x96.png',
+      body: 'Ada pembaruan baru di DicoStory!',
+      icon: './icons/icon-192x192.png',
+      badge: './icons/badge-96x96.png',
       vibrate: [100, 50, 100],
-      data: {
-        url: './'
-      }
+      data: { url: './' },
+      actions: [
+        {
+          action: 'open',
+          title: 'Buka App',
+          icon: './icons/icon-192x192.png'
+        },
+        {
+          action: 'close',
+          title: 'Tutup',
+        }
+      ]
     }
   };
 
   if (event.data) {
     try {
       const dataJson = event.data.json();
-      notification = dataJson;
+      notification = { ...notification, ...dataJson };
     } catch (e) {
       console.error('Error parsing push data:', e);
     }
@@ -126,26 +148,27 @@ self.addEventListener('push', (event) => {
   );
 });
 
-// Event Notification Click
 self.addEventListener('notificationclick', (event) => {
   console.log('Service Worker: Notification clicked');
   
   event.notification.close();
 
-  // Periksa apakah ada URL khusus di data notifikasi
+  if (event.action === 'close') {
+    return;
+  }
+
   const urlToOpen = event.notification.data && event.notification.data.url
     ? event.notification.data.url
     : './';
 
   event.waitUntil(
-    clients.matchAll({ type: 'window' })
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
         for (const client of clientList) {
-          if ((client.url === urlToOpen || client.url.includes('index.html')) && 'focus' in client) {
+          if (client.url.includes('index.html') || client.url === urlToOpen) {
             return client.focus();
           }
         }
-        
         if (clients.openWindow) {
           return clients.openWindow(urlToOpen);
         }
@@ -153,33 +176,29 @@ self.addEventListener('notificationclick', (event) => {
   );
 });
 
-// Event Ketika Service Worker Diinstal
 self.addEventListener('install', (event) => {
   console.log('Service Worker: Installed');
   self.skipWaiting();
 });
 
-// Event Ketika Service Worker Diaktifkan
 self.addEventListener('activate', (event) => {
   console.log('Service Worker: Activated');
   
-  // Mengklaim kontrol halaman yang belum dikontrol service worker
-  event.waitUntil(clients.claim());
-  
-  // Membersihkan cache lama
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((cacheName) => {
-            // Hapus cache lama yang tidak ada dalam daftar cache
-            return cacheName.startsWith('dicostory-') && 
-                  !['pages-cache', 'assets-cache', 'images-cache', 'api-cache'].includes(cacheName);
-          })
-          .map((cacheName) => {
-            return caches.delete(cacheName);
-          })
-      );
-    })
+    Promise.all([
+      clients.claim(),
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames
+            .filter((cacheName) => {
+              return cacheName.startsWith('dicostory-') && cacheName !== CACHE_NAME;
+            })
+            .map((cacheName) => {
+              console.log('Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            })
+        );
+      })
+    ])
   );
 });
