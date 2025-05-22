@@ -5,9 +5,9 @@ const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
-  './icons/icon-192x192.png',
-  './icons/icon-512x512.png',
-  './icons/badge-96x96.png',
+  './src/public/icons/icon-192x192.png',
+  './src/public/icons/icon-512x512.png',
+  './src/public/icons/badge-96x96.png',
 ];
 
 if (workbox) {
@@ -17,9 +17,9 @@ if (workbox) {
     { url: './', revision: '1' },
     { url: './index.html', revision: '1' },
     { url: './manifest.json', revision: '1' },
-    { url: './icons/icon-192x192.png', revision: '1' },
-    { url: './icons/icon-512x512.png', revision: '1' },
-    { url: './icons/badge-96x96.png', revision: '1' },
+    { url: './src/public/icons/icon-192x192.png', revision: '1' },
+    { url: './src/public/icons/icon-512x512.png', revision: '1' },
+    { url: './src/public/icons/badge-96x96.png', revision: '1' },
   ]);
 
   workbox.routing.registerRoute(
