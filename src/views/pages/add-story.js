@@ -11,6 +11,7 @@ class AddStoryPage {
     this._photoBlob = null;
     this._selectedLocation = null;
     this._photoSource = null;
+    this._hashChangeHandler = null; 
   }
 
   async render() {
@@ -109,8 +110,19 @@ class AddStoryPage {
     }, 100);
 
     this._initCameraButtons();
-   
     this._initFormSubmission();
+
+    this._setupHashChangeListener();
+  }
+
+  _setupHashChangeListener() {
+    this._hashChangeHandler = () => {
+      console.log('Hash changed, stopping camera if active');
+      this._stopCameraStream();
+    };
+    
+    window.addEventListener('hashchange', this._hashChangeHandler);
+    console.log('HashChange listener added for camera cleanup');
   }
 
   _initMap() {
@@ -504,7 +516,19 @@ class AddStoryPage {
   }
 
   beforeUnload() {
+    console.log('AddStoryPage beforeUnload called');
+    
+    // Stop camera stream
     this._stopCameraStream();
+    
+    // Remove hashchange listener
+    if (this._hashChangeHandler) {
+      window.removeEventListener('hashchange', this._hashChangeHandler);
+      this._hashChangeHandler = null;
+      console.log('HashChange listener removed');
+    }
+    
+    // Clean up map
     if (this._map) {
       this._map.remove();
       this._map = null;
